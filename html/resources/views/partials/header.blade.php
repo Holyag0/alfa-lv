@@ -1,23 +1,10 @@
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url('/') }}">Contact Manager</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/') }}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('contacts.index') }}">Contacts</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('contacts.create') }}">Add Contact</a>
-                    </li>
-                </ul>
-            </div>
+<header class="bg-white shadow-lg">
+    <nav class="container mx-auto p-4 flex justify-between items-center">
+        <a class="text-xl font-bold" href="{{ url('/') }}">Contact Manager</a>
+        <div>
+            <a class="px-4 py-2 text-gray-700 hover:text-gray-900" href="{{ url('/') }}">Home</a>
+            <a class="px-4 py-2 text-gray-700 hover:text-gray-900" href="{{ route('contacts.index') }}">Contacts</a>
+            <a class="px-4 py-2 text-gray-700 hover:text-gray-900" href="{{ route('contacts.create') }}">Add Contact</a>
         </div>
     </nav>
 </header>
