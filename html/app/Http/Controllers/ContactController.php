@@ -2,89 +2,69 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contact;
-use Illuminate\Http\Request;
+use App\Services\ContactService;
+use App\Http\Requests\ContactRequest;
+
 
 class ContactController extends Controller
 {
-    /**
-     * @return \Illuminate\View\View
-     */
+    protected $contactService;
+
+    public function __construct(ContactService $contactService)
+    {
+        $this->contactService = $contactService;
+    }
+
     public function index()
     {
-        $contacts = Contact::all();
+        $contacts = $this->contactService->getAllContacts();
         return view('contacts.index', compact('contacts'));
     }
 
-    /**
-     * @return \Illuminate\View\View
-     */
+    public function show($id)
+    {
+        $contact = $this->contactService->getContactById($id);
+        if (!$contact) {
+            return redirect()->route('contacts.index')->with('error', 'Contact not found.');
+        }
+        return view('contacts.show', compact('contact'));
+    }
+
     public function create()
     {
         return view('contacts.create');
     }
 
-    /**
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function store(Request $request)
+    public function store(ContactRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|min:5',
-            'contact' => 'required|digits:9|unique:contacts',
-            'email' => 'required|email|unique:contacts',
-        ]);
-
-        Contact::create($request->all());
-
-        return redirect()->route('contacts.index');
+        $this->contactService->createContact($request->validated());
+        return redirect()->route('contacts.index')->with('success', 'Contact created successfully.');
     }
 
-    /**
-     * @param  \App\Models\Contact  $contact
-     * @return \Illuminate\View\View
-     */
-    public function show(Contact $contact)
+    public function edit($id)
     {
-        return view('contacts.show', compact('contact'));
-    }
-
-    /**
-     * @param  \App\Models\Contact  $contact
-     * @return \Illuminate\View\View
-     */
-    public function edit(Contact $contact)
-    {
+        $contact = $this->contactService->getContactById($id);
+        if (!$contact) {
+            return redirect()->route('contacts.index')->with('error', 'Contact not found.');
+        }
         return view('contacts.edit', compact('contact'));
     }
 
-    /**
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Contact  $contact
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function update(Request $request, Contact $contact)
+    public function update(ContactRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|min:5',
-            'contact' => 'required|digits:9|unique:contacts,contact,' . $contact->id,
-            'email' => 'required|email|unique:contacts,email,' . $contact->id,
-        ]);
-
-        $contact->update($request->all());
-
-        return redirect()->route('contacts.index');
+        $contact = $this->contactService->updateContact($id, $request->validated());
+        if (!$contact) {
+            return redirect()->route('contacts.index')->with('error', 'Contact not found.');
+        }
+        return redirect()->route('contacts.index')->with('success', 'Contact updated successfully.');
     }
 
-    /**
-     * @param  \App\Models\Contact  $contact
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy(Contact $contact)
+    public function destroy($id)
     {
-        $contact->delete();
-
-        return redirect()->route('contacts.index');
+        $deleted = $this->contactService->deleteContact($id);
+        if (!$deleted) {
+            return redirect()->route('contacts.index')->with('error', 'Contact not found.');
+        }
+        return redirect()->route('contacts.index')->with('success', 'Contact deleted successfully.');
     }
 }

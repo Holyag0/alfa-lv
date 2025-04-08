@@ -29,21 +29,41 @@
                     </div>
                     <div class="flex flex-none items-center gap-x-4">
                         <a href="{{ route('contacts.show', $contact) }}"
-                            class="hidden rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-gray-100 ring-1 shadow-xs ring-black ring-inset hover:bg-blue-500 sm:block">Show<span
-                                class="sr-only">, {{ $contact->name }}</span></a>
+                            class="hidden rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-gray-100 ring-1 shadow-xs ring-black ring-inset hover:bg-blue-500 sm:block">
+                                Show
+                            <span class="sr-only">, {{ $contact->name }}</span></a>
                         <a href="{{ route('contacts.edit', $contact) }}"
-                            class="hidden rounded-md bg-yellow-500 px-2.5 py-1.5 text-sm font-semibold text-gray-100 ring-1 shadow-xs ring-black ring-inset hover:bg-yellow-400 sm:block">Edit<span
-                                class="sr-only">, {{ $contact->name }}</span></a>
-                        <form action="{{ route('contacts.destroy', $contact) }}" method="POST" style="display:inline;">
+                            class="hidden rounded-md bg-yellow-500 px-2.5 py-1.5 text-sm font-semibold text-gray-100 ring-1 shadow-xs ring-black ring-inset hover:bg-yellow-400 sm:block">
+                                Edit
+                            <span class="sr-only">, {{ $contact->name }}</span></a>
+                        <form action="{{ route('contacts.destroy', $contact) }}" 
+                            method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this contact?');">
                             @csrf
                             @method('DELETE')
                             <button type="submit"
-                                class="hidden rounded-md bg-red-700 px-2.5 py-1.5 text-sm font-semibold text-gray-100 ring-1 shadow-xs ring-black ring-inset hover:bg-red-500 sm:block">Delete<span
-                                    class="sr-only">, {{ $contact->name }}</span></button>
+                                class="hidden rounded-md bg-red-600 px-2.5 py-1.5 text-sm font-semibold text-gray-100 ring-1 shadow-xs ring-black ring-inset hover:bg-red-500 sm:block">
+                                    Delete
+                                <span class="sr-only">, {{ $contact->name }}</span></button>
                         </form>
                     </div>
                 </li>
             @endforeach
         </ul>
+        <div class="mt-4">
+            {{ $contacts->links() }}  <!-- Add pagination links -->
+        </div>
     </div>
+    <script>
+        function confirmDelete(contactId) {
+            const modal = document.getElementById('confirmDeleteModal');
+            const form = document.getElementById('deleteForm');
+            form.action = `/contacts/${contactId}`;
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('confirmDeleteModal');
+            modal.classList.add('hidden');
+        }
+    </script>
 @endsection

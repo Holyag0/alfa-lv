@@ -12,10 +12,11 @@
             <p class="text-gray-700"><strong>Modified:</strong> {{ $contact->updated_at->format('Y-m-d H:i:s') }}</p>
             <a href="{{ route('contacts.edit', $contact) }}"
                 class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded inline-block">Edit</a>
-            <form action="{{ route('contacts.destroy', $contact) }}" method="POST" style="display:inline;">
+            <form action="{{ route('contacts.destroy', $contact) }}" method="POST" style="display:inline;"
+                onsubmit="return confirm('Are you sure you want to delete this contact?');">
                 @csrf
                 @method('DELETE')
-                <button type="submit"class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                     Delete
                 </button>
             </form>
